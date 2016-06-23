@@ -155,7 +155,7 @@
  */
 - (void)selectionSortWithDataArray:(NSMutableArray *)array
 {
-    for (NSInteger i = 0; i < array.count; i++) {
+    for (NSInteger i = 0; i < array.count - 1; i++) {
         for (NSInteger j = i + 1; j < array.count; j++) {
             if ([array objectAtIndex:i] > [array objectAtIndex:j]) {
                 NSNumber * temp = [array objectAtIndex:i];
