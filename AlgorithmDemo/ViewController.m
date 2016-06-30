@@ -29,7 +29,7 @@
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"name"];
     [self.view addSubview:self.tableView];
     
-    self.dataArray = [NSMutableArray arrayWithObjects:@"冒泡排序  Bubble Sort",@"选择排序 selection sort",@"快速排序法  Divide and conquer",@"直接插入排序 Insertion Sort",@"归并排序 Merge sort", nil];
+    self.dataArray = [NSMutableArray arrayWithObjects:@"冒泡排序  Bubble Sort",@"选择排序 selection sort",@"快速排序法  Divide and conquer",@"直接插入排序 Insertion Sort",@"归并排序 Merge sort",@"逆序对", nil];
 
     [self resertArray];
     
@@ -111,6 +111,11 @@
             case 4:
             {
                 sortArray = [NSMutableArray arrayWithArray:[self mergeSortWithArray:sortArray]];
+            }
+                break;
+            case 5:
+            {
+                [self inversionWithArray:sortArray];
             }
                 break;
             default:
@@ -284,7 +289,6 @@
         return array;
     }
     NSInteger halfCount = array.count / 2;
-    NSLog(@"halfCount == %ld",halfCount);
     NSArray * leftArray = [self mergeSortWithArray:[array subarrayWithRange:NSMakeRange(0, halfCount)]];
     NSArray * rightArray =  [self mergeSortWithArray:[array subarrayWithRange:NSMakeRange(halfCount, array.count- halfCount)]];
     return [self mergeSortWithLeftArray:leftArray RightArray:rightArray];
@@ -308,6 +312,27 @@
     [resultArray addObject:([leftArray lastObject] > [rightArray lastObject]?leftArray.lastObject:rightArray.lastObject)];
     return resultArray;
 }
+
+
+
+/*
+ 在数组中的两个数字如果前面一个数字大于后面的数字，则这两个数字组成一个逆序对。给你一个数组，求出这个数组中逆序对的总数。
+ 概括：如果a[i] > a[j] 且 i < j， a[i] 和 a[j] 构成一个逆序对。
+ 序列 [2, 4, 1, 3, 5] 中，有 3 个逆序对 (2, 1), (4, 1), (4, 3)，则返回 3 。
+ */
+#pragma mark -- 逆序对
+- (void)inversionWithArray:(NSMutableArray *)array
+{
+    for (NSInteger i = 0; i < array.count - 1; i++) {
+        for (NSInteger j = i + 1; j < array.count; j++) {
+            if ([[array objectAtIndex:i] integerValue] > [[array objectAtIndex:j] integerValue]) {
+                //这里可以获取到逆序对
+//                NSLog(@"(%@,%@)",[array objectAtIndex:i],[array objectAtIndex:j]);
+            }
+        }
+    }
+}
+
 
 
 
