@@ -29,7 +29,7 @@
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"name"];
     [self.view addSubview:self.tableView];
     
-    self.dataArray = [NSMutableArray arrayWithObjects:@"冒泡排序  Bubble Sort",@"选择排序 selection sort",@"快速排序法  Divide and conquer",@"直接插入排序 Insertion Sort", nil];
+    self.dataArray = [NSMutableArray arrayWithObjects:@"冒泡排序  Bubble Sort",@"选择排序 selection sort",@"快速排序法  Divide and conquer",@"直接插入排序 Insertion Sort",@"归并排序 Merge sort", nil];
 
     [self resertArray];
     
@@ -52,11 +52,11 @@
         NSInteger number = arc4random() % kMaxNumber;
         [self.sortArray addObject:[NSNumber numberWithInteger:number]];
     }
-    
-    NSString * string = [self.sortArray componentsJoinedByString:@","];
-    
-//    NSLog(@"%@",string);
-    
+    if (kCount < 30) {
+        NSString * string = [self.sortArray componentsJoinedByString:@","];
+        //在数量过大的时候 不要打开log
+        NSLog(@"%@",string);
+    }
 }
 
 
@@ -108,14 +108,21 @@
                 
             }
                 break;
+            case 4:
+            {
+                [self mergeSortWithArray:sortArray];
+            }
+                break;
             default:
                 break;
         }
         double deltaTime = [[NSDate date] timeIntervalSinceDate:tmpStartData];
         NSLog(@">>>>>>>>>>cost time = %f ms", deltaTime*1000);
-        NSString * string = [sortArray componentsJoinedByString:@","];
-        //在数量过大的时候 不要打开log
-        //    NSLog(@"%@",string);
+        if (kCount < 30) {
+            NSString * string = [sortArray componentsJoinedByString:@","];
+            //在数量过大的时候 不要打开log
+            NSLog(@"%@",string);
+        }
     });
 
     
@@ -247,6 +254,68 @@
         }
     }
 }
+
+/*
+ 归并排序（Merge sort，台湾译作：合并排序）是建立在归并操作上的一种有效的排序算法。该算法是采用分治法（Divide and Conquer）的一个非常典型的应用。
+ 
+ 算法步骤：
+ 
+ 1. 申请空间，使其大小为两个已经排序序列之和，该空间用来存放合并后的序列
+ 2. 设定两个指针，最初位置分别为两个已经排序序列的起始位置
+ 3. 比较两个指针所指向的元素，选择相对小的元素放入到合并空间，并移动指针到下一位置
+ 4. 重复步骤3直到某一指针达到序列尾
+ 5. 将另一序列剩下的所有元素直接复制到合并序列尾
+ */
+//OC 归并排序
+- (NSArray *)mergeSortWithArray: (NSArray *)array
+{
+    if (array.count <= 1)
+    {
+        return array;
+    }
+    
+    NSInteger _number = array.count/2;
+    NSArray *_leftArray = [self mergeSortWithArray:
+                           [array subarrayWithRange:NSMakeRange(0, _number)]];
+    
+    NSArray *_rightArray = [self mergeSortWithArray:
+                            [array subarrayWithRange:NSMakeRange(_number, array.count-_number)]];
+    
+    NSLog(@"--%@",[self mergeWithLeftArray:_leftArray rightArray:_rightArray]);
+    return [self mergeWithLeftArray:_leftArray rightArray:_rightArray];
+}
+
+
+
+
+
+- (NSArray *)mergeWithLeftArray: (NSArray *)leftArray rightArray: (NSArray *)rightArray
+{
+    int l = 0;
+    int r = 0;
+    NSMutableArray *_resultArray = [NSMutableArray array];
+    
+    while (l < leftArray.count &&
+           r < rightArray.count)
+    {
+        if (leftArray[l] < rightArray[r])
+        {
+            [_resultArray addObject:leftArray[l]];
+            l++;
+        }
+        else
+        {
+            [_resultArray addObject:rightArray[r]];
+            r++;
+        }
+    }
+    
+    [_resultArray addObject: (leftArray.lastObject > rightArray.lastObject)?leftArray.lastObject:rightArray.lastObject];
+    
+    return _resultArray;
+}
+
+
 
 
 
