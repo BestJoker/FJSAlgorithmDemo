@@ -110,7 +110,7 @@
                 break;
             case 4:
             {
-                [self mergeSortWithArray:sortArray];
+                sortArray = [NSMutableArray arrayWithArray:[self mergeSortWithArray:sortArray]];
             }
                 break;
             default:
@@ -118,6 +118,11 @@
         }
         double deltaTime = [[NSDate date] timeIntervalSinceDate:tmpStartData];
         NSLog(@">>>>>>>>>>cost time = %f ms", deltaTime*1000);
+        if (kCount < 30) {
+            NSString * string = [sortArray componentsJoinedByString:@","];
+            //在数量过大的时候 不要打开log
+            NSLog(@"结果为: %@",string);
+        }
     });
 
     
@@ -260,58 +265,49 @@
  3. 比较两个指针所指向的元素，选择相对小的元素放入到合并空间，并移动指针到下一位置
  4. 重复步骤3直到某一指针达到序列尾
  5. 将另一序列剩下的所有元素直接复制到合并序列尾
+ 这里尤其要注意,可能很多朋友看起来觉得这里是将一个序列拆分开两个,然后排序,然后在拆分,在排序,但是使用递归之后,就是从最深层开始进行排序,然后一直往上层合并.
+ 
+ 归并操作(merge)，也叫归并算法，指的是将两个顺序序列合并成一个顺序序列的方法。
+ 如　设有数列{6，202，100，301，38，8，1}
+ 初始状态：6,202,100,301,38,8，1
+ 第一次归并后：{6,202},{100,301},{8,38},{1}，比较次数：3；
+ 第二次归并后：{6,100,202,301}，{1,8,38}，比较次数：4；
+ 第三次归并后：{1,6,8,38,100,202,301},比较次数：4；
+ 总的比较次数为：3+4+4=11,；
+ 逆序数为14；
+
  */
 //OC 归并排序
 - (NSArray *)mergeSortWithArray: (NSArray *)array
 {
-    if (array.count <= 1)
-    {
+    if (array.count <= 1) {
         return array;
     }
-    
-    NSInteger _number = array.count/2;
-    NSArray *_leftArray = [self mergeSortWithArray:
-                           [array subarrayWithRange:NSMakeRange(0, _number)]];
-    
-    NSArray *_rightArray = [self mergeSortWithArray:
-                            [array subarrayWithRange:NSMakeRange(_number, array.count-_number)]];
-    
-    if (kCount < 30) {
-        NSString * string = [[self mergeWithLeftArray:_leftArray rightArray:_rightArray] componentsJoinedByString:@","];
-        //在数量过大的时候 不要打开log
-        NSLog(@"排序过后的数组为: %@",string);
-    }
-    return [self mergeWithLeftArray:_leftArray rightArray:_rightArray];
+    NSInteger halfCount = array.count / 2;
+    NSLog(@"halfCount == %ld",halfCount);
+    NSArray * leftArray = [self mergeSortWithArray:[array subarrayWithRange:NSMakeRange(0, halfCount)]];
+    NSArray * rightArray =  [self mergeSortWithArray:[array subarrayWithRange:NSMakeRange(halfCount, array.count- halfCount)]];
+    return [self mergeSortWithLeftArray:leftArray RightArray:rightArray];
 }
 
-- (NSArray *)mergeWithLeftArray: (NSArray *)leftArray rightArray: (NSArray *)rightArray
+- (NSArray *)mergeSortWithLeftArray:(NSArray *)leftArray RightArray:(NSArray *)rightArray
 {
-    int l = 0;
-    int r = 0;
-    NSMutableArray *_resultArray = [NSMutableArray array];
-    
-    while (l < leftArray.count &&
-           r < rightArray.count)
-    {
-        if (leftArray[l] < rightArray[r])
+    NSInteger i = 0;
+    NSInteger j = 0;
+    NSMutableArray * resultArray = [NSMutableArray array];
+    while (i < leftArray.count && j < rightArray.count) {
+        if ([leftArray objectAtIndex:i] < [rightArray objectAtIndex:j]) {
+            [resultArray addObject:[leftArray objectAtIndex:i]];
+            i++;
+        }else
         {
-            [_resultArray addObject:leftArray[l]];
-            l++;
-        }
-        else
-        {
-            [_resultArray addObject:rightArray[r]];
-            r++;
+            [resultArray addObject:[rightArray objectAtIndex:j]];
+            j++;
         }
     }
-    
-    [_resultArray addObject: (leftArray.lastObject > rightArray.lastObject)?leftArray.lastObject:rightArray.lastObject];
-    
-    return _resultArray;
+    [resultArray addObject:([leftArray lastObject] > [rightArray lastObject]?leftArray.lastObject:rightArray.lastObject)];
+    return resultArray;
 }
-
-
-
 
 
 
