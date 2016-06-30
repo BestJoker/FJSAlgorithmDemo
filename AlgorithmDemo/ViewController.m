@@ -137,9 +137,13 @@
         //每次循环一次下面的,就可以找到最末尾的一个数字,所以在之后的循环中,可以减少点确定的数字的循环次数 dataArray.count - i - 1
         for (NSInteger j = 0; j < dataArray.count - i - 1; j++) {
             if ([dataArray objectAtIndex:j] > [dataArray objectAtIndex:j + 1]) {
-                NSNumber * temp = [dataArray objectAtIndex:j];
-                [dataArray replaceObjectAtIndex:j withObject:[dataArray objectAtIndex:j + 1]];
-                [dataArray replaceObjectAtIndex:j + 1 withObject:temp];
+                //采用传统的这种中间值方法 耗时很多
+//                NSNumber * temp = [dataArray objectAtIndex:j];
+//                [dataArray replaceObjectAtIndex:j withObject:[dataArray objectAtIndex:j + 1]];
+//                [dataArray replaceObjectAtIndex:j + 1 withObject:temp];
+                //使用数组封装的方法 会节约大量时间.
+                [dataArray exchangeObjectAtIndex:j withObjectAtIndex:j+1];
+
             }
         }
     }
@@ -158,9 +162,8 @@
     for (NSInteger i = 0; i < array.count - 1; i++) {
         for (NSInteger j = i + 1; j < array.count; j++) {
             if ([array objectAtIndex:i] > [array objectAtIndex:j]) {
-                NSNumber * temp = [array objectAtIndex:i];
-                [array replaceObjectAtIndex:i withObject:[array objectAtIndex:j]];
-                [array replaceObjectAtIndex:j withObject:temp];
+                //与冒泡排序相同,采用系统封装方法 速度会快很多.
+                [array exchangeObjectAtIndex:i withObjectAtIndex:j];
             }
         }
     }
