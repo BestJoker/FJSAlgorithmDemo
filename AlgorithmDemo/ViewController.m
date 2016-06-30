@@ -7,8 +7,8 @@
 //
 
 #import "ViewController.h"
-#define kCount 10000
-#define kMaxNumber 20000
+#define kCount 10
+#define kMaxNumber 200
 @interface ViewController ()<UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic,strong)UITableView * tableView;
 @property (nonatomic,strong)NSMutableArray * dataArray;
@@ -55,7 +55,7 @@
     if (kCount < 30) {
         NSString * string = [self.sortArray componentsJoinedByString:@","];
         //在数量过大的时候 不要打开log
-        NSLog(@"%@",string);
+        NSLog(@"初始数组为: %@",string);
     }
 }
 
@@ -118,11 +118,6 @@
         }
         double deltaTime = [[NSDate date] timeIntervalSinceDate:tmpStartData];
         NSLog(@">>>>>>>>>>cost time = %f ms", deltaTime*1000);
-        if (kCount < 30) {
-            NSString * string = [sortArray componentsJoinedByString:@","];
-            //在数量过大的时候 不要打开log
-            NSLog(@"%@",string);
-        }
     });
 
     
@@ -281,13 +276,13 @@
     NSArray *_rightArray = [self mergeSortWithArray:
                             [array subarrayWithRange:NSMakeRange(_number, array.count-_number)]];
     
-    NSLog(@"--%@",[self mergeWithLeftArray:_leftArray rightArray:_rightArray]);
+    if (kCount < 30) {
+        NSString * string = [[self mergeWithLeftArray:_leftArray rightArray:_rightArray] componentsJoinedByString:@","];
+        //在数量过大的时候 不要打开log
+        NSLog(@"排序过后的数组为: %@",string);
+    }
     return [self mergeWithLeftArray:_leftArray rightArray:_rightArray];
 }
-
-
-
-
 
 - (NSArray *)mergeWithLeftArray: (NSArray *)leftArray rightArray: (NSArray *)rightArray
 {
